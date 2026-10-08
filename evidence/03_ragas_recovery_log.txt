@@ -1,0 +1,23 @@
+
+📊 Prompt V1 — run 01a11a65-2048-7960-bb6b-9f4f13350c85 (07:23:17 UTC), 50 samples
+  faithfulness        : 0.9605   (50/50 sample hợp lệ)
+  answer_relevancy    : 0.9116   (50/50 sample hợp lệ)
+  context_recall      : 1.0000   (50/50 sample hợp lệ)
+  context_precision   : 0.9383   (50/50 sample hợp lệ)
+
+📊 Prompt V2 — run 01a11a74-0027-79f1-b470-529f724d0f50 (07:39:32 UTC), 50 samples
+  faithfulness        : 0.9625   (42/50 sample hợp lệ)
+  answer_relevancy    : 0.8926   (43/50 sample hợp lệ)
+  context_recall      : 1.0000   (44/50 sample hợp lệ)
+  context_precision   : 0.9437   (40/50 sample hợp lệ)
+
+=================================================================
+  Metric                                V1        V2  Winner
+=================================================================
+  faithfulness                      0.9605    0.9625  ← V2
+  answer_relevancy                  0.9116    0.8926  ← V1
+  context_recall                    1.0000    1.0000  = hòa
+  context_precision                 0.9383    0.9437  ← V2
+
+✅ Đạt mục tiêu: faithfulness = 0.9625 ≥ 0.8
+💾 Đã lưu báo cáo vào C:\Users\sy\K4-L3-Track2-Day22-LeMinhHieu-LLMOps-Prompt-Versioning\data\ragas_report.json

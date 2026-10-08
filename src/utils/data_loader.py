@@ -50,20 +50,39 @@ def split_text(text: str, chunk_size: int = 500, chunk_overlap: int = 50) -> lis
     return splitter.split_text(text)
 
 
-def build_vectorstore(chunks: list, embeddings):
+def build_vectorstore(chunks: list, embeddings, batch_size: int = 40, pause_s: int = None):
     """
     Tạo FAISS vectorstore từ danh sách chunks và embeddings.
+
+    Embed theo từng batch, nghỉ giữa các batch để không vượt rate limit
+    của provider (vd Gemini free tier: 100 embed requests / phút).
 
     Args:
         chunks    : list[str] — danh sách text chunks đã chia
         embeddings: Embeddings instance (từ get_embeddings())
+        batch_size: số chunks embed mỗi lượt
+        pause_s   : số giây nghỉ giữa 2 batch
+                    (mặc định: 30s với Gemini, 0s với provider khác)
 
     Returns:
         FAISS vectorstore đã được index và sẵn sàng dùng để retrieve
     """
+    import time
+    import config
     from langchain_community.vectorstores import FAISS
 
+    if pause_s is None:
+        pause_s = 30 if config.PROVIDER == "gemini" else 0
+
     print(f"🔨 Đang tạo FAISS index từ {len(chunks)} chunks ...")
-    vectorstore = FAISS.from_texts(chunks, embeddings)
+    vectorstore = None
+    for start in range(0, len(chunks), batch_size):
+        if start > 0:
+            time.sleep(pause_s)
+        batch = chunks[start:start + batch_size]
+        if vectorstore is None:
+            vectorstore = FAISS.from_texts(batch, embeddings)
+        else:
+            vectorstore.add_texts(batch)
     print("✅ FAISS vectorstore đã sẵn sàng.")
     return vectorstore
